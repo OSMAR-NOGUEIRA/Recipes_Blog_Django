@@ -1,10 +1,9 @@
 from django.urls import reverse, resolve
+from .test_recipe_base import RecipeTestBase
+
 from recipes import views
-from recipes.tests.test_recipe_base import RecipeTestBase
 
-
-class Recipe_views_tests(RecipeTestBase):
-
+class RecipeSearchViewTest(RecipeTestBase):
     def test_recipe_search_uses_correct_view_function(self):
         url = reverse('recipes:search')
         resolved = resolve(url)
