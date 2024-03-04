@@ -23,3 +23,44 @@ class RecipeSearchViewTest(RecipeTestBase):
         response = self.client.get(url)
         content = response.content.decode('utf-8')
         self.assertIn('&lt;test&gt; - Recipe Search', content)
+    
+    def test_recipe_search_can_find_recipe_by_title(self):
+        title_1 = 'This is recipe one'
+        title_2 = 'this is recipe two'
+        recipe_1 = self.make_recipe(title=title_1, slug='title-1',author_data={'username':'one'})
+        recipe_2 = self.make_recipe(title=title_2)
+    
+        response_1 = self.client.get(reverse('recipes:search')+ f'?q={title_1}')
+        response_2 = self.client.get(reverse('recipes:search')+ f'?q={title_2}')
+        response_both = self.client.get(reverse('recipes:search')+ f'?q=this')
+     
+        self.assertIn(recipe_1, response_1.context['recipes'])
+        self.assertNotIn(recipe_2, response_1.context['recipes'])
+
+        self.assertIn(recipe_2, response_2.context['recipes'])
+        self.assertNotIn(recipe_1, response_2.context['recipes'])
+
+        self.assertIn(recipe_1, response_both.context['recipes'])
+        self.assertIn(recipe_2, response_both.context['recipes'])
+
+    def test_recipe_search_can_find_recipe_by_description(self):
+        description_1 = 'This is description one'
+        description_2 = 'This is description two'
+
+        recipe_1 = self.make_recipe(description=description_1,
+                         author_data={'username':'one'},
+                         slug='d-one')
+        recipe_2 = self.make_recipe(description=description_2)
+
+        response_1 = self.client.get(reverse('recipes:search')+ f'?q={description_1}')
+        response_2 = self.client.get(reverse('recipes:search')+ f'?q={description_2}')
+        response_both = self.client.get(reverse('recipes:search')+ f'?q=this')
+     
+        self.assertIn(recipe_1, response_1.context['recipes'])
+        self.assertNotIn(recipe_2, response_1.context['recipes'])
+
+        self.assertIn(recipe_2, response_2.context['recipes'])
+        self.assertNotIn(recipe_1, response_2.context['recipes'])
+
+        self.assertIn(recipe_1, response_both.context['recipes'])
+        self.assertIn(recipe_2, response_both.context['recipes'])

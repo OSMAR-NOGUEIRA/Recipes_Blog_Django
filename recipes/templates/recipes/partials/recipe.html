@@ -1,9 +1,9 @@
 <div class="recipe recipe-list-item">
 
 {% if recipe.cover %}
-    <div class="recipe-list-cover">
+    <div class="recipe-list-cover recipe">
         <a href="{% url "recipes:recipe_detail" recipe.id %}">
-        <img src="{{ recipe.cover.url }}" alt="img recipe">
+        <img src="{{ recipe.cover.url }}" alt="img" >
         </a>
     </div>
 {% endif %}

@@ -9,13 +9,15 @@
 </head>
 
 <body>
-    {% include "global/partials/top.html" %}
-    {% include "global/partials/search.html" %}
+    <div id="page-container">
+        {% include "global/partials/top.html" %}
+        {% include "global/partials/search.html" %}
 
 
-    {% block content %}{% endblock content %}
+        {% block content %}{% endblock content %}
 
 
-    {% include "global/partials/footer.html" %}
+        {% include "global/partials/footer.html" %}
+    </div>
 </body>
 </html>
