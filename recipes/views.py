@@ -1,25 +1,44 @@
 from django.shortcuts import render, get_list_or_404, get_object_or_404
 from django.http import Http404
 from django.db.models import Q
+from django.core.paginator import Paginator
+from django.contrib import messages
+import os
 
 from recipes.models import Recipe
+from utils.pagination import make_pagination_range, make_pagination
 
 
+PER_PAGE = int(os.environ.get('PER_PAGE', 6))
 
 def index(request):
-    recipes = Recipe.objects.order_by('-id').filter(is_published=True)
+    recipes = Recipe.objects.order_by('-id').filter(is_published=True,)
+    
+    page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
+
 
     context = {
-        'recipes' : recipes,
-        'page_title': 'Recipes - Home'
+        'recipes' : page_obj,
+        'page_title': 'Recipes - Home',
+        'pagination_range' : pagination_range,
     }
+
+    messages.error(request, ' Test Success Message! ')
+    messages.success(request, ' Test Success Message! ')
+    messages.warning(request, ' Test Success Message! ')
+    messages.info(request, ' Test Success Message! ')
+
     return render(request, 'recipes/html/index.html', context)
 
 def category(request, category_id):
     recipes = get_list_or_404(Recipe.objects.order_by('-id').filter(category__id=category_id, is_published=True))
+    
+    page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
+    
     category_title = recipes[0].category.name
     context = {
-        'recipes' : recipes,
+        'recipes' : page_obj,
+        'pagination_range':pagination_range,
         'page_title': f'{category_title}'
     }
     return render(request, 'recipes/html/index.html', context)
@@ -45,10 +64,14 @@ def search(request):
         Q(description__icontains=search_term),
     ).filter(is_published=True).order_by('-id')
 
+    page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
+
     context = {
         'page_title': f'{search_term} - Recipe Search',
         'search_term': search_term,
-        'recipes': recipes,
+        'pagination_range':pagination_range,
+        'recipes': page_obj,
+        'additional_url_query':f'&q={search_term}',
     }
     
     return render(request, 'recipes/html/search.html', context)

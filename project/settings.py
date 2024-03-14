@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from django.contrib.messages import constants #constants para setar as classes css dos tipos de messages
+
+import os # para usar a dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-+8#amgum4kwt1m^&6rh!ma61=+w$_hmw=y@$sjhomvn@)&5kud'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'Insecure')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if os.environ.get('DEBUG') == '1' else False
 
 ALLOWED_HOSTS = []
 
@@ -133,3 +136,13 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+#setando as classes css dos tipos de messages
+MESSAGE_TAGS = { 
+    constants.DEBUG : 'message-debug',
+    constants.SUCCESS : 'message-success',
+    constants.INFO : 'message-info',
+    constants.WARNING : 'message-warning',
+    constants.ERROR : 'message-error',
+}

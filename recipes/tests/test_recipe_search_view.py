@@ -1,6 +1,9 @@
 from django.urls import reverse, resolve
 from .test_recipe_base import RecipeTestBase
+import math
+from unittest.mock import patch #biblioteca para modificar o valor de uma variavel de dentro das views ou outro arquivo do app
 
+from utils.generateFakes import make_fake_recipes
 from recipes import views
 
 class RecipeSearchViewTest(RecipeTestBase):
@@ -64,3 +67,26 @@ class RecipeSearchViewTest(RecipeTestBase):
 
         self.assertIn(recipe_1, response_both.context['recipes'])
         self.assertIn(recipe_2, response_both.context['recipes'])
+
+    @patch('recipes.views.PER_PAGE', new=9) # patch modifica o valor da variavel somente para uso no test e depois volta o valor oirginal da mesma
+    def test_recipe_search_pagination_loads_9_itens_per_page_ok(self):
+        number_of_objects = 36
+        recipes = make_fake_recipes(36, recipe_title='Recipes_Search Pagination Test')
+        response = self.client.get(reverse('recipes:search') + '?q=Recipes_Search Pagination Test')
+        self.assertEqual(len(response.context['recipes'].object_list), 9)
+
+    @patch('recipes.views.PER_PAGE', new=9)# patch modifica o valor da variavel somente para uso no test e depois volta o valor oirginal da mesma
+    def test_recipes_search_pagination_loads_correct_number_of_pages(self):
+        number_of_objects = 45
+        recipes = make_fake_recipes(number_of_objects, recipe_title='Recipes_Search Pagination Test')
+        response = self.client.get(reverse('recipes:search') + '?q=Recipes_Search Pagination Test')
+        qty_pgs = response.context['recipes'].paginator.num_pages
+        self.assertEqual(qty_pgs, math.ceil(number_of_objects/9) )
+
+    @patch('recipes.views.PER_PAGE', new=9)# patch modifica o valor da variavel somente para uso no test e depois volta o valor oirginal da mesma
+    def test_recipes_search_pagination_loads_correct_page(self):
+        recipes = make_fake_recipes(50, recipe_title='Recipes_Search Pagination Test')
+        page_needed = 3
+        response = self.client.get(reverse('recipes:search') + f'?page={page_needed}' + '&q=Recipes_Search Pagination Test')
+        current_page = response.context['recipes'].number
+        self.assertEqual(current_page, page_needed)

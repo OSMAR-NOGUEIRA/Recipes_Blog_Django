@@ -3,10 +3,6 @@ from django.contrib.auth.models import User
 from recipes.models import Recipe, Category
 
 class RecipeTestBase(TestCase):
-    #setUp se auto executa antes de cada teste
-    def setUp(self) -> None:
-        return super().setUp()
-
     def make_category(self, name='category'):
         return Category.objects.create(name=name)
     
@@ -64,7 +60,3 @@ class RecipeTestBase(TestCase):
             author = self.make_author(**author_data),
         )
     
-
-    #teardown se auto executa apos o final do teste
-    def tearDown(self) -> None:
-        return super().tearDown() 
