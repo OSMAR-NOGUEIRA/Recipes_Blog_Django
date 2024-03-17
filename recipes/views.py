@@ -16,17 +16,11 @@ def index(request):
     
     page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
 
-
     context = {
         'recipes' : page_obj,
-        'page_title': 'Recipes - Home',
+        'page_title': 'Home',
         'pagination_range' : pagination_range,
     }
-
-    messages.error(request, ' Test Success Message! ')
-    messages.success(request, ' Test Success Message! ')
-    messages.warning(request, ' Test Success Message! ')
-    messages.info(request, ' Test Success Message! ')
 
     return render(request, 'recipes/html/index.html', context)
 
@@ -35,20 +29,19 @@ def category(request, category_id):
     
     page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
     
-    category_title = recipes[0].category.name
     context = {
         'recipes' : page_obj,
         'pagination_range':pagination_range,
-        'page_title': f'{category_title}'
+        'page_title': recipes[0].category.name
     }
     return render(request, 'recipes/html/index.html', context)
 
 def recipe_detail(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id, is_published=True)
-    recipe_title = recipe.title
+   
     context = {
         'recipe' : recipe,
-        'page_title': f'{recipe_title}',
+        'page_title': recipe.title,
         'is_detail_page' : True,
     }
     return render(request, 'recipes/html/recipe_detail.html', context)
@@ -67,7 +60,7 @@ def search(request):
     page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
 
     context = {
-        'page_title': f'{search_term} - Recipe Search',
+        'page_title': search_term,
         'search_term': search_term,
         'pagination_range':pagination_range,
         'recipes': page_obj,
