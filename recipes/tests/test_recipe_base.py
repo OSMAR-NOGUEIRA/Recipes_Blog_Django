@@ -1,8 +1,9 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
+
 from recipes.models import Recipe, Category
 
-class RecipeTestBase(TestCase):
+class RecipeMixin():
     def make_category(self, name='category'):
         return Category.objects.create(name=name)
     
@@ -59,4 +60,9 @@ class RecipeTestBase(TestCase):
             category = self.make_category(**category_data),
             author = self.make_author(**author_data),
         )
+    
+
+class RecipeTestBase(TestCase, RecipeMixin):
+    def setUp(self) -> None:
+        return super().setUp()
     

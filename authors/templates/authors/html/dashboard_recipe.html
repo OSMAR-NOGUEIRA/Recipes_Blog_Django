@@ -1,0 +1,18 @@
+{% extends "global/html/base.html" %}
+
+{% block content %}
+    <div class="dashboard-top">
+        <a href="{% url "authors:dashboard" %}">
+            <h1 >My Dashboard</h1>
+        </a>
+
+        {% include "authors/html/partials/logged_message.html" %}
+    </div>
+    
+    <div class="main-content container center">
+        
+        <h2 class="center"> {{ recipe.title }}: </h2>
+    </div>
+    {% include "global/partials/form.html" %}
+{% endblock content %}
+

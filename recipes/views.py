@@ -17,8 +17,8 @@ def index(request):
     page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
 
     context = {
-        'recipes' : page_obj,
         'page_title': 'Home',
+        'recipes' : page_obj,
         'pagination_range' : pagination_range,
     }
 

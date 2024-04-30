@@ -1,10 +1,10 @@
 from django.urls import reverse, resolve
 from .test_recipe_base import RecipeTestBase
-from utils.generateFakes import make_fake_recipes
 import math
 from unittest.mock import patch
 
 from recipes import views
+from utils.generateFakes import make_batch_of_recipes
 
 
 class RecipeCategoryViewTest(RecipeTestBase):
@@ -42,7 +42,7 @@ class RecipeCategoryViewTest(RecipeTestBase):
     @patch('recipes.views.PER_PAGE', new=9)# patch modifica o valor da variavel somente para uso no test e depois volta o valor oirginal da mesma
     def test_recipe_category_pagination_loads_9_itens_per_page_ok(self):
         number_of_objects = 36
-        recipes = make_fake_recipes(36, category='CategoryTest')
+        recipes = make_batch_of_recipes(36, category='CategoryTest')
         category_id = recipes[0].category_id
 
         response = self.client.get(reverse('recipes:category' ,kwargs={'category_id':category_id}))
@@ -51,7 +51,7 @@ class RecipeCategoryViewTest(RecipeTestBase):
     @patch('recipes.views.PER_PAGE', new=9)# patch modifica o valor da variavel somente para uso no test e depois volta o valor oirginal da mesma
     def test_recipes_category_pagination_loads_correct_number_of_pages(self):
         number_of_objects = 45
-        recipes = make_fake_recipes(number_of_objects, category='CategoryTest')
+        recipes = make_batch_of_recipes(number_of_objects, category='CategoryTest')
         category_id = recipes[0].category_id
 
         response = self.client.get(reverse('recipes:category', kwargs={'category_id':category_id}))
@@ -60,7 +60,7 @@ class RecipeCategoryViewTest(RecipeTestBase):
 
     @patch('recipes.views.PER_PAGE', new=9)# patch modifica o valor da variavel somente para uso no test e depois volta o valor oirginal da mesma
     def test_recipes_category_pagination_loads_correct_page(self):
-        recipes = make_fake_recipes(50, category='CategoryTest')
+        recipes = make_batch_of_recipes(50, category='CategoryTest')
         category_id = recipes[0].category_id
         page_needed = 3
         response = self.client.get(reverse('recipes:category', kwargs={'category_id':1}) + f'?page={page_needed}')

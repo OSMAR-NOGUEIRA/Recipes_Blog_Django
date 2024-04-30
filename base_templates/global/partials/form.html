@@ -1,0 +1,38 @@
+<form action="{{ form_action }}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-content form-content-grid left">
+            {% for field in form %}
+
+                <div class="form-group">
+                    <label for="{{field.id_for_label}}"> {{field.label}}: </label>
+                    {{ field }}
+                    
+
+                    {% if field.help_text %}
+                        <p class="help-text">
+                            {{ field.help_text }}
+                        </p>
+                    {% endif %}
+
+                </div>
+
+                {% if field.errors %}
+                    <div class="error-list">
+                        {{field.errors}}
+                    </div>
+                {% endif %}
+                
+                {% if field.name == 'cover' and field.value.url %}
+                    <div class="span-2">
+                        <img src="{{ field.value.url }}" alt="cover of {{ recipe.title }}">
+                    </div>
+                {% endif %}
+
+            {% endfor %}
+
+            <div>
+                <button type="submit">Send</button>
+            </div>
+        </div>
+</form>

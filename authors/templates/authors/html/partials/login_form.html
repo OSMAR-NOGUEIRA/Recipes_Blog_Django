@@ -1,0 +1,45 @@
+<div class="form-group-login">
+    <label for="{{form.username.id_for_label}}"> 
+        {{form.username.label}}: 
+    </label>
+
+    <div class="input-icons">
+        <i class="fas fa-user icon-button"></i>
+        {{ form.username }}
+    </div>
+
+    {% if form.username.help_text %}
+        <p class="help-text">
+            {{ form.username.help_text }}
+        </p>
+    {% endif %}
+
+    {% if form.username.errors %}
+        <div class="error-list">
+            {{form.username.errors}}
+        </div>
+    {% endif %}
+</div>
+
+<div class="form-group-login">
+    <label for="{{form.password.id_for_label}}"> 
+        {{form.password.label}}: 
+    </label>
+
+    <div class="input-icons">
+         <i class="fas fa-lock icon-button"></i>
+        {{ form.password }}
+    </div>
+
+    {% if form.password.help_text %}
+        <p class="help-text">
+            {{ form.password.help_text }}
+        </p>
+    {% endif %}
+
+    {% if form.password.errors %}
+        <div class="error-list">
+            {{form.password.errors}}
+        </div>
+    {% endif %}
+</div>

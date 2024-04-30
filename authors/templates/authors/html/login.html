@@ -1,0 +1,42 @@
+{% extends "global/html/base.html" %}
+
+{% block content %}
+
+    <div class="main-content center">
+        <h1> Login </h1>
+    </div>
+
+    <div class="center">
+        {% if request.user.is_authenticated %}
+            {% include "authors/html/partials/logged_message.html" %}
+        {% else %}
+            <div class="main-content center">
+                <form class="login-form" action="{{ form_action }}" method="POST" >
+                    {% csrf_token %}
+            
+                    <div class="form-content form-content-grid"> 
+
+                        {% include "authors/html/partials/login_form.html" %}
+
+                        <div class="reset-password-button">
+                            <a href="#">Forgot Password?</a>
+                        </div>
+                        
+                        <div class="register-account-button">
+                            Don't have an account? <a href="{% url "authors:register" %}"> <b>Register</b> </a>
+                        </div>
+
+                        <div>
+                            <button type="submit">Send</button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+
+    
+
+{% endblock content %}
+

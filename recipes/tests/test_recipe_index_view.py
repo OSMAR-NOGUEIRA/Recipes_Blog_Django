@@ -1,10 +1,10 @@
 from .test_recipe_base import RecipeTestBase
 from django.urls import reverse, resolve
-from utils.generateFakes import make_fake_recipes
 import math
 from unittest.mock import patch
 
 from recipes import views
+from utils.generateFakes import make_batch_of_recipes
 
 
 
@@ -57,7 +57,7 @@ class RecipeIndexViewTest(RecipeTestBase):
         #    self.make_recipe(**kw)
 
         number_of_objects = 18
-        recipes = make_fake_recipes(number_of_objects)
+        recipes = make_batch_of_recipes(number_of_objects)
 
         response = self.client.get(reverse('recipes:index'))
 
@@ -66,7 +66,7 @@ class RecipeIndexViewTest(RecipeTestBase):
     @patch('recipes.views.PER_PAGE', new=9)# patch modifica o valor da variavel somente para uso no test e depois volta o valor oirginal da mesma
     def test_recipes_index_pagination_loads_correct_number_of_pages(self):
         number_of_objects = 45
-        recipes = make_fake_recipes(number_of_objects)
+        recipes = make_batch_of_recipes(number_of_objects)
 
         response = self.client.get(reverse('recipes:index'))
         qty_pgs = response.context['recipes'].paginator.num_pages
@@ -75,7 +75,7 @@ class RecipeIndexViewTest(RecipeTestBase):
 
     @patch('recipes.views.PER_PAGE', new=9)# patch modifica o valor da variavel somente para uso no test e depois volta o valor oirginal da mesma
     def test_recipes_index_pagination_loads_correct_page(self):
-        recipes = make_fake_recipes(50)
+        recipes = make_batch_of_recipes(50)
         page_needed = 3
 
         response = self.client.get(reverse('recipes:index') + f'?page={page_needed}')

@@ -1,0 +1,45 @@
+{% extends "global/html/base.html" %}
+
+{% block content %}
+    {% include "authors/html/partials/logged_message.html" %}
+
+    <div class="main-content container center">
+        <h1 class="center"> Dashboard ({{ request.user.username }}) </h1>
+
+        <div class="authors-dashboard-container center">
+
+            <div class="author-recipes">
+                <h2>Yours Recipes:</h2>
+                <ul class="dashboard-author-recipes">
+                    {% for recipe in recipes %}
+                        <li>
+                            <a href="{% url "authors:recipe_edit" recipe.id %}">{{ recipe.title }}</a>
+                            <form class="js-recipe-delete" action="{% url "authors:recipe_delete" %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="recipe_to_delete" value="{{ recipe.id }}">
+                                <button class="recipe-del plain-text-button" type="submit">❌</button>
+                            </form>
+                        </li>
+                    {% empty %}
+                        <li>
+                            <h3>You do not have any recipes to be edited!</h3>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="dashboard-options">
+                <ul>
+                    <li>
+                        <a href="{% url "authors:dashboard_new_recipe" %}" class="new-recipe-option">
+                            Create a new recipe
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        
+        </div>
+    </div>
+
+{% endblock content %}
+

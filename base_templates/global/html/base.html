@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,17 +12,22 @@
 <body>
     <div class="page-container">
         {% include "global/partials/top.html" %}
-        {% include "global/partials/search.html" %}
+        {% include "global/partials/search.html" %}   
 
         <main class="main-content-container">
             
+            {% include "global/partials/messages.html" %}
+
             {% block content %}{% endblock content %}
 
-            {% include "recipes/partials/pagination.html" %}
+            {% include "global/partials/pagination.html" %}
 
         </main>
 
     </div>
-            {% include "global/partials/footer.html" %}
+
+    {% include "global/partials/footer.html" %}
+
+    <script src="{% static "global/js/script.js" %}"></script>
 </body>
 </html>
