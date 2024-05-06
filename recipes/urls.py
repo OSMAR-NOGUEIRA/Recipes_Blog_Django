@@ -2,10 +2,11 @@ from django.urls import path
 from recipes import views
 
 app_name = 'recipes'
-
+ 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('recipes/search/', views.search, name='search'),
-    path('recipes/category/<int:category_id>/', views.category, name='category'),
-    path('recipe/<int:recipe_id>/', views.recipe_detail, name='recipe_detail'),
-]
+    path('', views.RecipeListViewHome.as_view(), name='index'),
+    path('recipes/search/', views.RecipeListViewSearch.as_view(), name='search'),
+    path('recipes/category/<int:category_id>/', views.RecipeListViewCategory.as_view(), name='category'),
+    path('recipe/<int:pk>/', views.RecipeDetailView.as_view(), name='recipe_detail'),
+]   #                 /\
+#                     || WE GOT USE PK AS A KEYWORD WHEN USING A DETAIL CLASS BASED VIEW

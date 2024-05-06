@@ -20,3 +20,4 @@ class RecipeCategoryModelTest(RecipeTestBase):
         self.category.full_clean()
         self.category.save()
         self.assertEqual(str(self.category), needed)
+    

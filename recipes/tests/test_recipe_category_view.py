@@ -10,7 +10,7 @@ from utils.generateFakes import make_batch_of_recipes
 class RecipeCategoryViewTest(RecipeTestBase):
     def test_recipes_category_view_function_is_correct(self):
         category_view = resolve(reverse('recipes:category', kwargs={'category_id': 1,}))
-        self.assertEqual(category_view.func, views.category)
+        self.assertEqual(category_view.func.view_class, views.RecipeListViewCategory)
 
     def test_recipes_category_view_loads_correct_template(self):
         self.make_recipe()

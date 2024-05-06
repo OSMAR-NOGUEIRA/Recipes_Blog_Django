@@ -11,7 +11,7 @@ from utils.generateFakes import make_batch_of_recipes
 class RecipeIndexViewTest(RecipeTestBase):
     def test_recipes_index_view_function_is_correct(self):
         index_view = resolve(reverse('recipes:index'))
-        self.assertIs(index_view.func, views.index)
+        self.assertIs(index_view.func.view_class, views.RecipeListViewHome)
 
     def test_recipes_index_view_loads_correct_template(self):
         response = self.client.get(reverse('recipes:index'))
@@ -60,7 +60,7 @@ class RecipeIndexViewTest(RecipeTestBase):
         recipes = make_batch_of_recipes(number_of_objects)
 
         response = self.client.get(reverse('recipes:index'))
-
+        
         self.assertEqual(len(response.context['recipes'].object_list), 9)
 
     @patch('recipes.views.PER_PAGE', new=9)# patch modifica o valor da variavel somente para uso no test e depois volta o valor oirginal da mesma
