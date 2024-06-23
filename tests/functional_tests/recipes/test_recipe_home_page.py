@@ -7,7 +7,6 @@ from .base import RecipeBaseFunctionalTest
 from utils.generateFakes import make_batch_of_recipes
 
 
-
 @pytest.mark.functional_test
 class RecipeHomePageFunctionalTest(RecipeBaseFunctionalTest):
     def test_recipe_home_index__no_recipes_found__message(self):
@@ -17,7 +16,7 @@ class RecipeHomePageFunctionalTest(RecipeBaseFunctionalTest):
         
     def test_recipe_search_can_find_correct_recipes(self):
         title_needed = 'recipe title maching for search'
-        make_batch_of_recipes(qty_recipes=10, one_recipe_title=title_needed)
+        make_batch_of_recipes(qty_recipes=10, first_recipe_title=title_needed)
         
         #user open the page
         self.browser.get(self.live_server_url)
@@ -36,7 +35,7 @@ class RecipeHomePageFunctionalTest(RecipeBaseFunctionalTest):
         
         self.assertIn('recipe title maching for search', body)
         
-    @patch('recipes.views.PER_PAGE', new=2)
+    @patch('recipes.views.recipe_views.PER_PAGE', new=2)
     def test_recipe_home_index_pagination(self):
         make_batch_of_recipes()
         

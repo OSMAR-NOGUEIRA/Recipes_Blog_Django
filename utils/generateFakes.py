@@ -38,7 +38,7 @@ def make_author(
             email=email,
         )
 
-def make_batch_of_recipes(qty_recipes=10, one_recipe_title=None, title_for_all_recipes=None, category=None):
+def make_batch_of_recipes(qty_recipes=10, first_recipe_title=None, title_for_all_recipes=None, category=None):
         NUMBER_OF_OBJECTS = qty_recipes
 
 
@@ -61,9 +61,8 @@ def make_batch_of_recipes(qty_recipes=10, one_recipe_title=None, title_for_all_r
         django_itens_recipes = []
 
         for i in range(NUMBER_OF_OBJECTS):
-            if i == 1:
-                if one_recipe_title != None:
-                    title = one_recipe_title
+            if i == 0 and first_recipe_title != None:
+                title = first_recipe_title 
             else:
                 title = fake.dish() if title_for_all_recipes == None else title_for_all_recipes
             description = fake.sentence()

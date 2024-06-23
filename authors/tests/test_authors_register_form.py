@@ -50,6 +50,8 @@ class AuthorRegisterFormUnitTest(TestCase):
         self.assertEqual(value_test, current_field_value)
 
 
+
+
 class AuthorRegisterFormIntegrationTest(DjangoTestCase):
     def setUp(self, *args, **kwargs):
         self.form_data = {

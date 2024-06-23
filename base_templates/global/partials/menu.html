@@ -1,0 +1,30 @@
+<button class="button-show-menu button-show-menu-visible">
+    <i class="fas fa-bars"></i>
+    <span class="hidden-text">Show menu</span>
+</button>
+  
+<div class="menu-container menu-hidden">
+    <button class="button-close-menu button-close-menu-visible">
+        <i class="fas fa-times-circle"></i>
+        <span class="hidden-text">Close menu</span>
+    </button>
+  
+    <div class="menu-content">
+        <nav class="menu-nav">
+            <a href="{% url 'recipes:index' %}">Home</a>
+  
+            {% if user.is_authenticated %}
+                <a href="{% url 'authors:dashboard_new_recipe' %}">New recipe</a>
+                <a href="{% url 'authors:dashboard' %}">Dashboard</a>
+                <a href="{% url "authors:profile_edit" user.profile.id %}">My profile</a>
+
+                {% include "authors/html/partials/logout_form.html" %}
+                <a class="authors-logout-link" href="{% url 'authors:logout' %}">Logout</a>
+            
+            {% else %}
+                <a href="{% url 'account_login' %}">Login</a>
+                <a href="{% url 'account_signup' %}">SigUp</a>
+            {% endif %}
+        </nav>
+    </div>
+</div>

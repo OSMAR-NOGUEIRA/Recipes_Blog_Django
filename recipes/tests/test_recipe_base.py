@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
+from random import randrange
 
 from recipes.models import Recipe, Category
 
@@ -15,6 +16,8 @@ class RecipeMixin():
             password='12345678',
             email='a@email.com',
             ):
+        
+        username += f'user {randrange(1, 99)}'
         
         return User.objects.create_user(
             username=username,
@@ -38,6 +41,7 @@ class RecipeMixin():
             is_published = True,
             category_data = None,
             author_data = None,
+            cover = None,
                     ):
 
         if category_data is None:
@@ -58,9 +62,10 @@ class RecipeMixin():
             preparation_steps_is_html = preparation_steps_is_html,
             is_published = is_published,
             category = self.make_category(**category_data),
-            author = self.make_author(**author_data),
+            author = author_data if type(author_data) is not dict else self.make_author(**author_data),
+            cover = cover,
         )
-    
+        ...
 
 class RecipeTestBase(TestCase, RecipeMixin):
     def setUp(self) -> None:

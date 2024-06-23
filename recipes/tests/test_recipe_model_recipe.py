@@ -1,9 +1,13 @@
 from django.core.exceptions import ValidationError
 from parameterized import parameterized
+from unittest.mock import patch
+from PIL import Image
+from django.conf import settings
+import os
 
 from recipes.models import Recipe
-
 from recipes.tests.test_recipe_base import RecipeTestBase
+
 
 class RecipeModelTest(RecipeTestBase):
     def setUp(self) -> None:
@@ -64,3 +68,45 @@ class RecipeModelTest(RecipeTestBase):
                         msg=f'Recipe string representation must be '
                             f'"{needed}" but "{str(self.recipe)}" was received!')
          
+    def test_recipe_manager_returns_only_published_recipes(self):
+        recipe_not_published = self.make_recipe(is_published=False, title='Recipe not published')
+        recipe_published = self.make_recipe(is_published=True, title='Recipe published')
+        
+        recipes = Recipe.objects.get_published_recipes()
+        
+        self.assertNotIn(recipe_not_published, recipes)
+        self.assertIn(recipe_published, recipes)
+   
+   
+    def test_recipe_model_resize_image_ok(self):
+        recipe = self.make_recipe(
+            cover='/Users/osmarnogueira/Documents/Code_base/Django_Udemy/Section11/Django-project1/recipes/tests/assets/img.jpg'
+            )
+        img = recipe.cover
+        image_full_path = os.path.join(settings.MEDIA_ROOT, img.name)
+        original_image_pillow = Image.open(image_full_path)
+        original_width, original_height = original_image_pillow.size
+        
+        img_new_width = 100
+        
+        Recipe.resize_image(image=img, new_width=img_new_width)
+        
+        image_pillow = Image.open(image_full_path)
+        
+        new_width, new_height = image_pillow.size
+        
+        self.assertEqual(new_height, (int((new_width * original_height) / original_width)))
+        self.assertEqual(new_width, img_new_width)
+        
+        Recipe.resize_image(image=img, new_width=original_width, force=True)
+        
+        
+    def test_recipe_model_slug_is_been_generate_if_no_slug_passed_ok(self):
+        recipe = self.make_recipe(title='title recipe test', slug=None)
+        intended_slug = 'Title-recipe-test'
+        self.assertEqual(recipe.slug, intended_slug)
+        
+    def test_recipe_model_method_resize_image_does_not_break_aplication(self):
+        false_cover_path = '/nonefile'
+        recipe = self.make_recipe(cover=false_cover_path)
+        self.assertEqual(recipe.cover.url, f'/media{false_cover_path}')

@@ -2,16 +2,20 @@ from django.db.models.query import QuerySet
 from django.http import Http404
 from django.db.models import Q
 from django.views.generic import ListView, DetailView
+from django.utils.translation import gettext as _
+from django.utils import translation
+
 import os
 
 from recipes.models import Recipe
 from utils.pagination import make_pagination
+from tag.models import Tag
 
 
 PER_PAGE = int(os.environ.get('PER_PAGE', 6))
 
 
-class RecipeListView(ListView):
+class RecipeListViewBase(ListView):
     model = Recipe
     context_object_name= 'recipes'
     paginate_by = 5
@@ -23,6 +27,12 @@ class RecipeListView(ListView):
         qs = qs.filter(
             is_published=True,
         )
+        
+        qs = qs.select_related('author', 'category',) #Just to improve the performance when getting data from database
+        
+        #prefetch_related = COMO ESTAMOS USANDO AS TAGS FAZEMOS A RELACAO ENTRE AS RECIPES E TAGS PARA SEREM BUSCADAS NA MESMA CONSULTA NO BANCO DE DADOS, PARA MELHOR PERFORMANCE
+        qs = qs.prefetch_related('tags', 'author__profile',)
+        
         return qs
 
     def get_context_data(self, *args, **kwargs):
@@ -34,20 +44,22 @@ class RecipeListView(ListView):
             recipes,
             PER_PAGE
         )
+        
         context.update(
             {
-            'page_title': 'Home',
+            'page_title': f'{_('Home')}',
             'recipes' : page_obj,
             'pagination_range' : pagination_range,
+            'html_language': translation.get_language() ,#GETTING THE LANGUAGE USED IN THE NAVEGATOR JUST TO SET THE <html lang="{{ html_language }}"> (NOT USED TO TRANSLATE ANYTHING)
             })
         return context
     
 
-class RecipeListViewHome(RecipeListView):
+class RecipeListViewHome(RecipeListViewBase):
     template_name = 'recipes/html/index.html'
     
     
-class RecipeListViewCategory(RecipeListView):
+class RecipeListViewCategory(RecipeListViewBase):
     template_name = 'recipes/html/index.html'
     
     def get_queryset(self, *args, **kwargs):
@@ -65,13 +77,15 @@ class RecipeListViewCategory(RecipeListView):
     
     def get_context_data(self,*args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        category_translation_title = _('Category')
+        
         context.update({
-            'page_title': context['recipes'][0].category.name,
+            'page_title': f'{context.get('recipes')[0].category.name} - { category_translation_title }',
         })
         return context
        
        
-class RecipeListViewSearch(RecipeListView):
+class RecipeListViewSearch(RecipeListViewBase):
     template_name = 'recipes/html/search.html'
     
     def get_queryset(self, *args, **kwargs):
@@ -123,64 +137,28 @@ class RecipeDetailView(DetailView):
         
         return context
     
-
-############################################    FUNCTION BASED VIEWS    ##############################################################
-
-#def recipe_detail(request, recipe_id):
-#    recipe = get_object_or_404(Recipe, id=recipe_id, is_published=True)
-   
-#    context = {
-#        'recipe' : recipe,
-#        'page_title': recipe.title,
-#        'is_detail_page' : True,
-#    }
-#    return render(request, 'recipes/html/recipe_detail.html', context)
-
-#def index(request):
-#    recipes = Recipe.objects.order_by('-id').filter(is_published=True,)
+class RecipeListViewTag(RecipeListViewBase):
+    template_name = 'recipes/html/search.html'
     
-#    page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
-
-#    context = {
-#        'page_title': 'Home',
-#        'recipes' : page_obj,
-#        'pagination_range' : pagination_range,
-#    }
-
-#    return render(request, 'recipes/html/index.html', context)
-
-#def category(request, category_id):
-#    recipes = get_list_or_404(Recipe.objects.order_by('-id').filter(category__id=category_id, is_published=True))
-#    
-#    page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
-#    
-#    context = {
-#        'recipes' : page_obj,
-#        'pagination_range':pagination_range,
-#        'page_title': recipes[0].category.name
-#    }
-#    return render(request, 'recipes/html/index.html', context)
-
-
-#def search(request):
-#    search_term = request.GET.get('q', '').strip()
-
-#    if not search_term:
-#        raise Http404()
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+        
+        tag_slug = self.kwargs.get('slug', '')
+        qs = qs.filter(tags__slug=tag_slug)
+        
+        return qs
     
-#    recipes = Recipe.objects.filter(
-#        Q(title__icontains=search_term) |
-#        Q(description__icontains=search_term),
-#    ).filter(is_published=True).order_by('-id')
-
-#    page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
-
-#    context = {
-#        'page_title': search_term,
-#        'search_term': search_term,
-#        'pagination_range':pagination_range,
-#        'recipes': page_obj,
-#        'additional_url_query':f'&q={search_term}',
-#    }
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        slug = self.kwargs.get('slug', '')
+        
+        tag = Tag.objects.filter(slug=slug).first()
+        
+        if not tag:
+            tag = _('No recipes found!')
+        
+        context.update({
+        'page_title': f'{tag} - Tag',
+        })
+        return context
     
-#    return render(request, 'recipes/html/search.html', context)

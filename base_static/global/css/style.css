@@ -90,7 +90,7 @@ input{
 .form-content{
     margin: 0 auto;
     margin-bottom: var(--spacing-gutter-medium);
-    max-width: 64rem;
+    max-width: 53rem;
     background-color: var(--color-gray-1);
     border-radius: 1rem;
 }
@@ -181,6 +181,38 @@ input{
     height: 25rem;
 }
 
+.social-login{
+    display: flex;
+    align-content: center;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+    align-items: baseline;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.form-content div .social-login-button{
+    width: 12rem;
+    height: 5rem;
+    padding: 0;
+}
+
+.google-login{
+    display: flex;
+    flex-flow: row;
+    justify-content: space-evenly;
+    gap: .5rem;
+    width: 11rem;
+    height: 4rem;
+    padding: .1rem .6rem;
+    border: .1rem outset buttonborder;
+    border-radius: 2rem;
+    color: buttontext;
+    background-color: buttonface;
+    text-decoration: none;
+    align-items: center;
+}
+
 
 
 
@@ -236,6 +268,83 @@ input{
 
 
 
+
+.hidden-text {
+    display: none;
+  }
+  
+  .menu-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 260px;
+    min-height: 100vh;
+    overflow-y: auto;
+    background: var(--color-primary);
+    z-index: 2;
+    transition: all 300ms ease-in-out;
+  }
+  
+  .menu-container a {
+    color: var(--color-white);
+  }
+  
+  .menu-hidden {
+    left: -255px;
+  }
+  
+  .button-show-menu {
+    position: fixed;
+    left: 265px;
+    top: 2rem;
+    color: var(--color-white);
+    background-color: var(--color-primary);
+    border: none;
+    font-size: 2rem;
+    z-index: 3;
+    padding: 1rem;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 300ms ease-in-out;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+  }
+  
+  .button-show-menu-visible {
+    visibility: visible;
+    opacity: 1;
+    left: 5px;
+  }
+  
+  .button-close-menu {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: var(--color-white);
+    background: none;
+    border: none;
+    font-size: 2rem;
+    z-index: 3;
+    cursor: pointer;
+  }
+  
+  .menu-nav {
+    display: flex;
+    flex-flow: column wrap;
+    font-family: var(--font-headings);
+    font-size: 2rem;
+  }
+  
+  .menu-nav a {
+    width: 100%;
+    padding: 1rem;
+  }
+
+
+
+  
+  
 
 
 
@@ -572,6 +681,18 @@ input{
     background-color: var(--color-primary-dark);
     border-radius: 2.2rem;
 }
+
+
+
+
+.profile-img{
+    border: .2rem solid var(--color-gray-5);
+    border-radius: 22rem;
+    width: 15rem;
+    height: 15rem;
+    padding: .1rem;
+}
+
 
 
 

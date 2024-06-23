@@ -1,12 +1,11 @@
 <!--  FAZENDO COM QUE A O BOTAO LOGOUT SEJA UM FORM PARA EVITAR ATAQUES DE CSRF -->
 <!--  ASSIM QUANDO A PESSOA CLICAR NO BOTAO, ELA IRA SER REDIRECIONADA PARA A VIEW LOGOUT E PASSANDO A INFORMACAO DO USERNAME TAMBEM-->
-<div class="logged-message center">
-    You are logged in as: <b>{{ request.user.username }}.</b>
-    <br>
-    <br>
-    <form action="{% url "authors:logout" %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="username" value="{{ request.user.username }}">
-        <button class="plain-text-button" type="submit"> Click here </button> to logout.
-    </form>
-</div>
+{% if user.is_authenticated %}
+    <div class="logged-message center">
+        You are logged in as: <b>{{ request.user.username }}.</b>
+        <br>
+        <br>
+        {% include "authors/html/partials/logout_form.html" %}
+        <a class="plain-text-button authors-logout-link"> Click here </a> to logout.
+    </div>
+{% endif %}

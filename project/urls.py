@@ -25,6 +25,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('recipes.urls')),
     path('authors/', include('authors.urls')),
+    path("__debug__/", include("debug_toolbar.urls")),
+    path('accounts/', include('allauth.urls')),
 ]
 
 #For use of MEDIA

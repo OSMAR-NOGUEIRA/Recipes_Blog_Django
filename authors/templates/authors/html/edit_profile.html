@@ -1,0 +1,16 @@
+{% extends "global/html/base.html" %}
+
+{% block content %}
+    <div class="container center">
+        <h2>Edit your Profile:</h2>
+
+        <div class="center">
+            {% if request.user.profile.image %}
+                <img src="{{ request.user.profile.image.url }}" alt="img" class="profile-img">
+            {% endif %}
+            <p>@{{ request.user.username }}</p>
+        </div>
+        <br>
+        {% include "global/partials/form.html" %}
+    </div>
+{% endblock content %}

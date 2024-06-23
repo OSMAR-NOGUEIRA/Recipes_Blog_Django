@@ -30,6 +30,7 @@ class AuthorsLoginTest(AuthorsBaseTest):
         
         self.assertIn(f'You are logged in as: {user.username}.' , body)
         
+        
     def test_form_login_is_invalid(self):
         #User open login page
         self.browser.get(self.live_server_url + reverse('authors:login'))

@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ html_language }}">
+
 <head>
     
     {% include "global/partials/head.html" %}
@@ -11,6 +12,7 @@
 
 <body>
     <div class="page-container">
+        {% include "global/partials/menu.html" %}
         {% include "global/partials/top.html" %}
         {% include "global/partials/search.html" %}   
 

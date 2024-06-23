@@ -1,4 +1,3 @@
-from typing import Any
 from django import forms
 from recipes.models import Recipe
 from django.core.exceptions import ValidationError
@@ -85,22 +84,24 @@ class AuthorRecipeEditForm(forms.ModelForm):
         }
         
     def clean(self, *args, **kwargs):
-        super().clean(*args, **kwargs)
+        clean = super().clean(*args, **kwargs)
+        
+        title = clean.get('title')
+        description = clean.get('description')
+        
+        if title == description:
+            self._my_errors['title'].append('Title can not be same as description.')
+            self._my_errors['description'].append('Description can not be same as title')
         
         if self._my_errors:
             raise ValidationError(self._my_errors)
         
-        return super().clean(*args, **kwargs)
+        return clean
         
     def clean_title(self):
         title = self.cleaned_data.get('title')
-        description = self.cleaned_data.get('description')
         if len(title) < 4:
             self._my_errors['title'].append('Title must have at least 3 characters.')
-
-        if title == description:
-            self._my_errors['title'].append('Title can not be same as description.')
-            self._my_errors['description'].append('Description can not be same as title')
         return title
 
     def clean_description(self):
